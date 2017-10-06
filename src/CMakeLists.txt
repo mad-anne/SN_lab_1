@@ -3,7 +3,8 @@ project(src)
 
 set(SOURCE_FILES
         perceptron/source/Perceptron.cpp
-        functions/source/UnipolarStepFunction.cpp)
+        functions/source/UnipolarStepFunction.cpp
+        functions/source/BipolarStepFunction.cpp)
 
 add_library (sourcelib ${SOURCE_FILES})
 
