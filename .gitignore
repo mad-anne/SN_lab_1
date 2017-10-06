@@ -1,0 +1,4 @@
+.idea/*
+cmake-build-debug/*
+tests/lib/*
+tests/__init__.py
