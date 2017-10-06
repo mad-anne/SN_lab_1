@@ -5,11 +5,15 @@
 
 class Neuron : public INeuron
 {
+    int numberOfInputs;
+    double alfa;
+
     public:
-        Neuron();
+        Neuron(int numberOfInputs, double alfa);
         ~Neuron();
 
         double getDiscreteError(double output, double expectedOutput) const override;
+        double getNet(double* inputs, double* weights) const override;
 };
 
 
