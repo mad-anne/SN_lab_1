@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.7)
 project(src)
 
 set(SOURCE_FILES
-        perceptron/source/Perceptron.cpp
         functions/source/UnipolarStepFunction.cpp
-        functions/source/BipolarStepFunction.cpp)
+        functions/source/BipolarStepFunction.cpp
+
+        neurons/source/Neuron.cpp)
 
 add_library (sourcelib ${SOURCE_FILES})
 
