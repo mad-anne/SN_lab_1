@@ -6,14 +6,14 @@ const size_t DATA_SIZE = 2;
 
 class DataTestSuite : public ::testing::Test
 {
-public:
-    DataTestSuite();
-    ~DataTestSuite();
+    public:
+        DataTestSuite();
+        ~DataTestSuite();
 
-protected:
-    double* data;
-    int* label;
-    IData* sut;
+    protected:
+        double* data;
+        int* label;
+        IData* sut;
 };
 
 DataTestSuite::DataTestSuite() :

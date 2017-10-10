@@ -10,16 +10,15 @@ class NeuronTestSuite : public ::testing::Test
         ~NeuronTestSuite();
 
     protected:
-        double theta;
-        INeuron* sut;
-        double alfa;
         int numberOfInputs;
+        double alpha;
+        INeuron* sut;
 };
 
 NeuronTestSuite::NeuronTestSuite() :
-    numberOfInputs(4),
-    alfa(0.5),
-    sut(new Neuron(numberOfInputs, alfa))
+    numberOfInputs(2),
+    alpha(0.5),
+    sut(new Neuron(numberOfInputs, alpha))
 {}
 
 NeuronTestSuite::~NeuronTestSuite()

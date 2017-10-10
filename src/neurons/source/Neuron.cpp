@@ -4,7 +4,9 @@ Neuron::Neuron(int numberOfInputs, double alfa) :
     INeuron(),
     numberOfInputs(numberOfInputs),
     alfa(alfa)
-{}
+{
+
+}
 
 Neuron::~Neuron()
 {}
