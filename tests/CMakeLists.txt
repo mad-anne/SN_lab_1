@@ -9,9 +9,11 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 set(SOURCE_FILES
         gtest.cpp
-        tests/UnipolarStepFunctionTestSuite.cpp
+
         tests/BipolarStepFunctionTestSuite.cpp
-        tests/NeuronTestSuite.cpp)
+        tests/DataSetAccessorTestSuite.cpp
+        tests/NeuronTestSuite.cpp
+        tests/UnipolarStepFunctionTestSuite.cpp)
 
 add_executable(tests_run ${SOURCE_FILES})
 
