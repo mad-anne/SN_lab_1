@@ -10,12 +10,14 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 set(SOURCE_FILES
         gtest.cpp
 
-        tests/BipolarStepFunctionTestSuite.cpp
-        tests/DataTestSuite.cpp
-        tests/DataSetTestSuite.cpp
-        tests/DataSetAccessorTestSuite.cpp
-        tests/NeuronTestSuite.cpp
-        tests/UnipolarStepFunctionTestSuite.cpp)
+        tests/datasets/DataTestSuite.cpp
+        tests/datasets/DataSetTestSuite.cpp
+        tests/datasets/DataSetAccessorTestSuite.cpp
+
+        tests/functions/BipolarStepFunctionTestSuite.cpp
+        tests/functions/UnipolarStepFunctionTestSuite.cpp
+
+        tests/neurons/NeuronTestSuite.cpp)
 
 add_executable(tests_run ${SOURCE_FILES})
 
