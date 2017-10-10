@@ -5,18 +5,19 @@
 
 class DataSet : public IDataSet
 {
-    double** inputs;
-    int* labels;
-    int numberOfInputs;
-    int inputSize;
+    std::vector<const IData*>* dataSet;
+    const size_t dataSetSize;
+    const size_t dataSize;
 
     public:
-        DataSet(double** inputs, int* labels, int numberOfInputs, int inputSize);
+        DataSet(std::vector<const IData*>* dataSet, const size_t dataSize, const size_t dataSetSize);
         ~DataSet();
 
-        double* getData(int index) const override;
-        int getDataSetSize() const override;
-        int getDataSize() const override;
+        const IData* getData(const int index) const override;
+        const size_t getDataSetSize() const override;
+        const size_t getDataSize() const override;
+
+        void clearDataSet();
 };
 
 

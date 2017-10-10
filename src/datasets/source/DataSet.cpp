@@ -1,37 +1,47 @@
+#include <vector>
+#include <iostream>
 #include "datasets/header/DataSet.h"
 
 DataSet::DataSet(
-    double** inputs,
-    int* labels,
-    int numberOfInputs,
-    int inputSize) :
-        inputs(inputs),
-        labels(labels),
-        numberOfInputs(numberOfInputs),
-        inputSize(inputSize)
+    std::vector<const IData*>* dataSet,
+    const size_t dataSize,
+    const size_t dataSetSize) :
+        IDataSet(),
+        dataSet(dataSet),
+        dataSize(dataSize),
+        dataSetSize(dataSetSize)
 {}
 
 DataSet::~DataSet()
 {
-    for (int i = 0; i < numberOfInputs; ++i)
-        delete[] inputs[i];
-    delete[] inputs;
-    delete[] labels;
+    clearDataSet();
 }
 
-double* DataSet::getData(int index) const
+void DataSet::clearDataSet()
 {
-    if (0 <= index < numberOfInputs)
-        return inputs[index];
+    for (auto &it : (*dataSet))
+        delete it;
+    (*dataSet).clear();
+    delete dataSet;
+}
+
+const IData* DataSet::getData(const int index) const
+{
+    if (0 <= index && index < dataSetSize)
+    {
+        int size = (*dataSet).size();
+        const IData* data = (*dataSet).at(index);
+        return data;
+    }
     return nullptr;
 }
 
-int DataSet::getDataSetSize() const
+const size_t DataSet::getDataSetSize() const
 {
-    return numberOfInputs;
+    return dataSetSize;
 }
 
-int DataSet::getDataSize() const
+const size_t DataSet::getDataSize() const
 {
-    return inputSize;
+    return dataSize;
 }

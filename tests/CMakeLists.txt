@@ -11,6 +11,8 @@ set(SOURCE_FILES
         gtest.cpp
 
         tests/BipolarStepFunctionTestSuite.cpp
+        tests/DataTestSuite.cpp
+        tests/DataSetTestSuite.cpp
         tests/DataSetAccessorTestSuite.cpp
         tests/NeuronTestSuite.cpp
         tests/UnipolarStepFunctionTestSuite.cpp)
