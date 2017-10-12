@@ -6,7 +6,7 @@ class IClassifier
     public:
         ~IClassifier() = default;
 
-        virtual void learn(int epochs) const = 0;
+        virtual void learn(int epochs) = 0;
 };
 
 #endif //SN_LAB_1_ICLASSIFIER_H

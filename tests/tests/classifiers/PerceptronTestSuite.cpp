@@ -4,6 +4,8 @@
 #include "datasets/header/Data.h"
 #include "datasets/header/DataSet.h"
 #include "datasets/header/DataSetAccessor.h"
+#include "functions/header/UnipolarStepFunction.h"
+#include "neurons/header/Neuron.h"
 
 const size_t DATA_SET_SIZE = 4;
 const size_t DATA_SIZE = 2;
@@ -18,6 +20,10 @@ class PerceptronTestSuite : public ::testing::Test
         std::vector<const IData*>* _dataSet;
         IDataSet* dataSet;
         IDataSetAccessor* dataSetAccessor;
+        double theta;
+        const IActivationFunction* function;
+        INeuron* neuron;
+        double alpha;
         Perceptron* sut;
 
         void initDataSet();
@@ -27,7 +33,11 @@ PerceptronTestSuite::PerceptronTestSuite() :
     _dataSet(new std::vector<const IData*>()),
     dataSet(new DataSet(_dataSet, DATA_SIZE, DATA_SET_SIZE)),
     dataSetAccessor(new DataSetAccessor(dataSet)),
-    sut(new Perceptron(dataSetAccessor))
+    theta(0.5),
+    function(new UnipolarStepFunction(theta)),
+    neuron(new Neuron(function)),
+    alpha(0.01),
+    sut(new Perceptron(alpha, dataSetAccessor, neuron))
 {
     initDataSet();
 }

@@ -7,17 +7,23 @@
 
 class Perceptron : public IClassifier
 {
+    double alpha;
+
     IDataSetAccessor* dataSetAccessor;
     const INeuron* neuron;
+    double* weights;
 
     public:
-        Perceptron(IDataSetAccessor* dataSetAccessor, const INeuron* neuron);
+        Perceptron(double alpha, IDataSetAccessor* dataSetAccessor, const INeuron* neuron);
         ~Perceptron();
 
-        void learn(int epochs) const override;
+        void learn(int epochs) override;
 
     private:
+        void updateWeights(double discreteError, const IData* data);
+
         double getDiscreteError(double output, double expectedOutput) const;
+        void initRandomWeights(double max);
 };
 
 
