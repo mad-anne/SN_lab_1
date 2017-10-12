@@ -18,8 +18,10 @@ class Perceptron : public IClassifier
         ~Perceptron();
 
         void learn(int epochs) override;
+        int predict(const IData* data) const;
 
     private:
+        void learnEpoch();
         void updateWeights(double discreteError, const IData* data);
 
         double getDiscreteError(double output, double expectedOutput) const;

@@ -8,8 +8,8 @@ set(SOURCE_FILES
         datasets/source/DataSet.cpp
         datasets/source/DataSetAccessor.cpp
 
-        functions/source/UnipolarStepFunction.cpp
         functions/source/BipolarStepFunction.cpp
+        functions/source/UnipolarStepFunction.cpp
 
         neurons/source/Neuron.cpp)
 

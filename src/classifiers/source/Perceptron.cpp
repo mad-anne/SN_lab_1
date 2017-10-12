@@ -7,29 +7,40 @@ Perceptron::Perceptron(
         IClassifier(),
         alpha(alpha),
         dataSetAccessor(dataSetAccessor),
-        neuron(neuron)
+        neuron(neuron),
+        weights(nullptr)
 {}
 
 Perceptron::~Perceptron()
 {
     delete dataSetAccessor;
+    delete neuron;
+    delete[] weights;
 }
 
 void Perceptron::learn(int epochs)
 {
     initRandomWeights(0.01);
     for (int i = 0; i < epochs; ++i)
+        learnEpoch();
+}
+
+void Perceptron::learnEpoch()
+{
+    const IData* data;
+    while ((data = dataSetAccessor->getNext()) != nullptr)
     {
-        const IData* data;
-        while ((data = dataSetAccessor->getNext()) != nullptr)
-        {
-            double output = neuron->processData(data, weights);
-            double discreteError = getDiscreteError(output, *data->getLabel());
-            updateWeights(discreteError, data);
-        }
-        dataSetAccessor->shuffle();
-        dataSetAccessor->begin();
+        double output = neuron->processData(data, weights);
+        double discreteError = getDiscreteError(output, *data->getLabel());
+        updateWeights(discreteError, data);
     }
+    dataSetAccessor->shuffle();
+    dataSetAccessor->begin();
+}
+
+int Perceptron::predict(const IData* data) const
+{
+    return (int) neuron->processData(data, weights);
 }
 
 double Perceptron::getDiscreteError(double output, double expectedOutput) const
@@ -40,6 +51,10 @@ double Perceptron::getDiscreteError(double output, double expectedOutput) const
 void Perceptron::initRandomWeights(double max)
 {
     const size_t dataSize = dataSetAccessor->getDataSet()->getDataSize();
+
+    if (weights == nullptr)
+        weights = new double[dataSize];
+
     for (int i = 0; i < dataSize; ++i)
         weights[i] = max * ((double) rand() / (double) RAND_MAX);
 }
