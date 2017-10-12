@@ -1,25 +1,27 @@
 #include "neurons/header/Neuron.h"
 
-Neuron::Neuron(int numberOfInputs, double alfa) :
+Neuron::Neuron(const IActivationFunction* function) :
     INeuron(),
-    numberOfInputs(numberOfInputs),
-    alfa(alfa)
+    function(function)
 {
 
 }
 
 Neuron::~Neuron()
-{}
-
-double Neuron::getDiscreteError(double output, double expectedOutput) const
 {
-    return expectedOutput - output;
+    delete function;
 }
 
-double Neuron::getNet(double* inputs, double* weights) const
+double Neuron::processData(const IData* data, double* weights) const
+{
+    double output = getNet(data->getData(), weights, data->getDataSize());
+    return function->getOutput(output);
+}
+
+double Neuron::getNet(const double* inputs, const double* weights, const size_t dataSize) const
 {
     double sum = 0;
-    for (int i = 0; i < numberOfInputs; ++i)
+    for (int i = 0; i < dataSize; ++i)
         sum += inputs[i] * weights[i];
     return sum;
 }

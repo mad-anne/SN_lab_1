@@ -1,19 +1,21 @@
 #ifndef SN_LAB_1_NEURON_H
 #define SN_LAB_1_NEURON_H
 
+#include "functions/interface/IActivationFunction.h"
 #include "neurons/interface/INeuron.h"
 
 class Neuron : public INeuron
 {
-    int numberOfInputs;
-    double alfa;
+    const IActivationFunction* function;
 
     public:
-        Neuron(int numberOfInputs, double alfa);
+        Neuron(const IActivationFunction* function);
         ~Neuron();
 
-        double getDiscreteError(double output, double expectedOutput) const override;
-        double getNet(double* inputs, double* weights) const override;
+        double processData(const IData* data, double* weights) const override;
+
+    private:
+        double getNet(const double* inputs, const double* weights, const size_t dataSize) const;
 };
 
 

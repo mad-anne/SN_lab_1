@@ -3,16 +3,21 @@
 
 #include "classifiers/interface/IClassifier.h"
 #include "datasets/interface/IDataSetAccessor.h"
+#include "neurons/interface/INeuron.h"
 
 class Perceptron : public IClassifier
 {
-    const IDataSetAccessor* dataSetAccessor;
+    IDataSetAccessor* dataSetAccessor;
+    const INeuron* neuron;
 
     public:
-        Perceptron(const IDataSetAccessor* dataSetAccessor);
+        Perceptron(IDataSetAccessor* dataSetAccessor, const INeuron* neuron);
         ~Perceptron();
 
-        void learn() const override;
+        void learn(int epochs) const override;
+
+    private:
+        double getDiscreteError(double output, double expectedOutput) const;
 };
 
 
