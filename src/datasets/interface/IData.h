@@ -6,7 +6,7 @@
 class IData
 {
     public:
-        ~IData() = default;
+        virtual ~IData() = default;
 
         virtual const double* getData() const = 0;
         virtual const int* getLabel() const = 0;

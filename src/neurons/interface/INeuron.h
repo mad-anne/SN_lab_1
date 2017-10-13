@@ -6,7 +6,7 @@
 class INeuron
 {
     public:
-        ~INeuron() = default;
+        virtual ~INeuron() = default;
 
         virtual double processData(const IData* data, double* weights) const = 0;
 };

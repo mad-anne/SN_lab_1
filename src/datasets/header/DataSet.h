@@ -1,6 +1,8 @@
 #ifndef SN_LAB_1_DATASET_H
 #define SN_LAB_1_DATASET_H
 
+#include <vector>
+
 #include "datasets/interface/IDataSet.h"
 
 class DataSet : public IDataSet

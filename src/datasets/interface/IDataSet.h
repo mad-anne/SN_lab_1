@@ -6,7 +6,7 @@
 class IDataSet
 {
     public:
-        ~IDataSet() = default;
+        virtual ~IDataSet() = default;
 
         virtual const IData* getData(const int index) const = 0;
         virtual const size_t getDataSetSize() const = 0;

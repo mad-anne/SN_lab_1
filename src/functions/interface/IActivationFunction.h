@@ -4,7 +4,7 @@
 class IActivationFunction
 {
     public:
-        ~IActivationFunction() = default;
+        virtual ~IActivationFunction() = default;
 
         virtual double getOutput(double input) const = 0;
 };

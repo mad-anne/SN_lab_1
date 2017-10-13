@@ -6,7 +6,7 @@
 class IClassifier
 {
     public:
-        ~IClassifier() = default;
+        virtual ~IClassifier() = default;
 
         virtual void learn(int epochs) = 0;
         virtual int predict(const IData* data) const = 0;

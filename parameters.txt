@@ -1,0 +1,5 @@
+alpha 0.01
+theta 0.5
+dataSize 2
+dataSetSize 4
+randomWeightsDeviation 0.01
