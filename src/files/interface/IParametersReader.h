@@ -6,7 +6,7 @@ class IParametersReader
     public:
         virtual ~IParametersReader() = default;
 
-        virtual void read() = 0;
+        virtual void read(std::string fileName) = 0;
         virtual void printParameters() const = 0;
         virtual double getParameter(std::string name) const = 0;
 };

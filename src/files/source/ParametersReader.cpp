@@ -4,14 +4,13 @@
 
 #include "files/header/ParametersReader.h"
 
-ParametersReader::ParametersReader() :
-    fileName("../../parameters.txt")
-{}
+ParametersReader::ParametersReader()
+= default;
 
 ParametersReader::~ParametersReader()
 = default;
 
-void ParametersReader::read()
+void ParametersReader::read(std::string fileName)
 {
     std::string name;
     double value;

@@ -7,13 +7,12 @@
 class ParametersReader : public IParametersReader
 {
     std::map<std::string, double> parameters;
-    std::string fileName;
 
     public:
         ParametersReader();
         ~ParametersReader();
 
-        void read() override;
+        void read(std::string fileName) override;
         void printParameters() const override;
         double getParameter(std::string name) const override;
 };
