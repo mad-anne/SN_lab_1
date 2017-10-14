@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 project(src)
 
 set(SOURCE_FILES
+        classifiers/source/Adaline.cpp
         classifiers/source/Perceptron.cpp
 
         datasets/source/Data.cpp

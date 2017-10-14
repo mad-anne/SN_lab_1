@@ -1,14 +1,18 @@
-#include "classifiers/header/Perceptron.h"
+#include "classifiers/header/Adaline.h"
 
-Perceptron::Perceptron(
-    double alpha,
-    const double* bias,
-    IDataSetAccessor* dataSetAccessor,
-    const INeuron* neuron,
-    const IActivationFunction* activationFunction) :
+#include <iostream>
+
+Adaline::Adaline(
+        double alpha,
+        const double* bias,
+        const double minMSE,
+        IDataSetAccessor* dataSetAccessor,
+        const INeuron* neuron,
+        const IActivationFunction* activationFunction) :
         IClassifier(),
         alpha(alpha),
         bias(bias),
+        minMSE(minMSE),
         w0(nullptr),
         dataSetAccessor(dataSetAccessor),
         neuron(neuron),
@@ -16,7 +20,7 @@ Perceptron::Perceptron(
         weights(nullptr)
 {}
 
-Perceptron::~Perceptron()
+Adaline::~Adaline()
 {
     delete neuron;
     delete[] weights;
@@ -25,40 +29,47 @@ Perceptron::~Perceptron()
     delete w0;
 }
 
-void Perceptron::learn(int epochs)
+void Adaline::learn(int epochs)
 {
     if (weights == nullptr)
         return;
 
     for (int i = 0; i < epochs; ++i)
-        learnEpoch();
+    {
+        double mse = learnEpoch();
+        if (mse < minMSE)
+            break;
+    }
 }
 
-void Perceptron::learnEpoch()
+double Adaline::learnEpoch()
 {
     dataSetAccessor->shuffleTrainingSet();
     dataSetAccessor->trainingDataBegin();
 
+    double errorsSum = 0;
     const IData* data;
     while ((data = dataSetAccessor->getNextTrainingData()) != nullptr)
     {
-        double output = function->getOutput(neuron->processData(data, weights, bias, w0));
-        double discreteError = getDiscreteError(output, *data->getLabel());
-        updateWeights(discreteError, data);
+        double output = neuron->processData(data, weights, bias, w0);
+        double error = getError(output, *data->getLabel());
+        errorsSum += error * error;
+        updateWeights(error, data);
     }
+    return errorsSum / dataSetAccessor->getDataSet()->getDataSetSize();
 }
 
-int Perceptron::predict(const IData* data) const
+int Adaline::predict(const IData* data) const
 {
     return (int) function->getOutput(neuron->processData(data, weights, bias, w0));
 }
 
-double Perceptron::getDiscreteError(double output, double expectedOutput) const
+double Adaline::getError(double output, double expectedOutput) const
 {
     return expectedOutput - output;
 }
 
-void Perceptron::initRandomWeights(double zeroDeviation)
+void Adaline::initRandomWeights(double zeroDeviation)
 {
     const size_t dataSize = dataSetAccessor->getDataSet()->getDataSize();
 
@@ -78,9 +89,9 @@ void Perceptron::initRandomWeights(double zeroDeviation)
     w0 = new double(2 * zeroDeviation * random - zeroDeviation);
 }
 
-void Perceptron::updateWeights(double discreteError, const IData* data)
+void Adaline::updateWeights(double error, const IData* data)
 {
-    double factor = alpha * discreteError;
+    double factor = 2 * alpha * error;
     const size_t dataSize = data->getDataSize();
     const double* inputs = data->getData();
 

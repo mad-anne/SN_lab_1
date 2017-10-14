@@ -1,10 +1,11 @@
 alpha 0.01
-epochs 50
+epochs 100
 bias 1.0
 dataSize 2
-randomWeightsZeroDeviation 0.2
+randomWeightsZeroDeviation 0.1
 enlargeDataSetTimes 100
 enlargedDataSetMaxDeviation 0.01
 trainingSetPart 0.7
 validatingSetPart 0.15
 testingSetPart 0.15
+minMSE 0.043
