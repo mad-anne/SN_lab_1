@@ -100,6 +100,8 @@ const IParametersReader* readParameters(const std::string& fileName)
     std::cout << "Parameters:\n";
     parametersReader->printParameters();
 
+    std::cout << "Reading parameters  finished\n\n";
+
     return parametersReader;
 }
 
@@ -112,7 +114,7 @@ const IDataSet* readDataSet(
 
     std::cout << "\nReading dataset for AND from " << fileName << "...\n\n";
     const IDataSet* dataSet = dataSetReader->readDataSet(fileName, dataSize);
-    std::cout << "Data set reading finished.\n\n";
+    std::cout << "Reading dataset finished\n\n";
     return dataSet;
 }
 
@@ -125,27 +127,29 @@ void process(IDataSetAccessor* dataSetAccessor, const IParametersReader* paramet
 
     Perceptron perceptron(alpha, dataSetAccessor, new Neuron(new UnipolarStepFunction(theta)));
 
-    std::cout << "Perceptron starts to learn..." << std::endl;
-    perceptron.learn(epochs, zeroDeviation);
-    std::cout << "Perceptron finished learning." << std::endl;
+    std::cout << "Perceptron initializing random weights..." << std::endl;
+    perceptron.initRandomWeights(zeroDeviation);
+    std::cout << "Perceptron learning..." << std::endl;
+    perceptron.learn(epochs);
+    std::cout << "Perceptron finished learning" << std::endl;
 
     const IData* input = new Data(new double[DATA_SIZE] {0, 0}, new int(0), DATA_SIZE);
-    std::cout << "Perceptron predict 0 and 0" << std::endl;
+    std::cout << "Perceptron predicts 0 and 0" << std::endl;
     std::cout << perceptron.predict(input) << std::endl << std::endl;
     delete input;
 
     input = new Data(new double[DATA_SIZE] {0, 1}, new int(0), DATA_SIZE);
-    std::cout << "Perceptron predict 0 and 1" << std::endl;
+    std::cout << "Perceptron predicts 0 and 1" << std::endl;
     std::cout << perceptron.predict(input) << std::endl << std::endl;
     delete input;
 
     input = new Data(new double[DATA_SIZE] {1, 0}, new int(0), DATA_SIZE);
-    std::cout << "Perceptron predict 1 and 0" << std::endl;
+    std::cout << "Perceptron predicts 1 and 0" << std::endl;
     std::cout << perceptron.predict(input) << std::endl << std::endl;
     delete input;
 
     input = new Data(new double[DATA_SIZE] {1, 1}, new int(1), DATA_SIZE);
-    std::cout << "Perceptron predict 1 and 1" << std::endl;
+    std::cout << "Perceptron predicts 1 and 1" << std::endl;
     std::cout << perceptron.predict(input) << std::endl << std::endl;
     delete input;
 }

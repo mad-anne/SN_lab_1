@@ -18,9 +18,8 @@ Perceptron::~Perceptron()
     delete[] weights;
 }
 
-void Perceptron::learn(int epochs, double initWeightsDeviation)
+void Perceptron::learn(int epochs)
 {
-    initRandomWeights(initWeightsDeviation);
     for (int i = 0; i < epochs; ++i)
         learnEpoch();
 }

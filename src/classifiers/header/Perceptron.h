@@ -17,15 +17,14 @@ class Perceptron : public IClassifier
         Perceptron(double alpha, IDataSetAccessor* dataSetAccessor, const INeuron* neuron);
         ~Perceptron();
 
-        void learn(int epochs, double initWeightsDeviation) override;
+        void initRandomWeights(double zeroDeviation);
+        void learn(int epochs) override;
         int predict(const IData* data) const;
 
     private:
         void learnEpoch();
         void updateWeights(double discreteError, const IData* data);
-
         double getDiscreteError(double output, double expectedOutput) const;
-        void initRandomWeights(double max);
 };
 
 
