@@ -27,7 +27,7 @@ int main()
 {
     const IParametersReader* parametersReader = readParameters("../../parameters.txt");
     const IDataSetReader* dataSetReader = new DataSetReader();
-    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_and.txt");
+    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_and_unipolar.txt");
     const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
     IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
 
