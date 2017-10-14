@@ -6,5 +6,5 @@ randomWeightsZeroDeviation 0.2
 enlargeDataSetTimes 50
 enlargedDataSetMaxDeviation 0.01
 trainingSetPart 0.7
-validationSetPart 0.15
-testSetPart 0.15
+validatingSetPart 0.15
+testingSetPart 0.15

@@ -20,22 +20,23 @@ Perceptron::~Perceptron()
 
 void Perceptron::learn(int epochs, double initWeightsDeviation)
 {
-    initRandomWeights(0.01);
+    initRandomWeights(initWeightsDeviation);
     for (int i = 0; i < epochs; ++i)
         learnEpoch();
 }
 
 void Perceptron::learnEpoch()
 {
+    dataSetAccessor->shuffleTrainingSet();
+    dataSetAccessor->trainingDataBegin();
+
     const IData* data;
-    while ((data = dataSetAccessor->getNext()) != nullptr)
+    while ((data = dataSetAccessor->getNextTrainingData()) != nullptr)
     {
         double output = neuron->processData(data, weights);
         double discreteError = getDiscreteError(output, *data->getLabel());
         updateWeights(discreteError, data);
     }
-    dataSetAccessor->shuffle();
-    dataSetAccessor->begin();
 }
 
 int Perceptron::predict(const IData* data) const

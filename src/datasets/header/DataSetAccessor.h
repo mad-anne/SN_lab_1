@@ -7,15 +7,30 @@ class DataSetAccessor : public IDataSetAccessor
 {
     const IDataSet* dataSet;
     std::vector<int> indexes;
-    std::vector<int>::iterator it;
+
+    std::vector<int> trainingSetIndexes;
+    std::vector<int> validatingSetIndexes;
+    std::vector<int> testingSetIndexes;
+
+    std::vector<int>::iterator trainingIt;
+    std::vector<int>::iterator validatingIt;
+    std::vector<int>::iterator testingIt;
 
     public:
         DataSetAccessor(const IDataSet*);
         ~DataSetAccessor();
 
-        void begin() override;
-        const IData* getNext() override;
-        void shuffle() override;
+        void splitDataSet(double trainingPart, double validatingPart, double testingPart) override;
+
+        void trainingDataBegin() override;
+        void validatingDataBegin() override;
+        void testingDataBegin() override;
+
+        const IData* getNextTrainingData() override;
+        const IData* getNextValidatingData() override;
+        const IData* getNextTestingData() override;
+
+        void shuffleTrainingSet() override;
 
         const IDataSet* getDataSet() const override;
 };

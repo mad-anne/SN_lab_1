@@ -13,11 +13,15 @@
 const size_t DATA_SET_SIZE = 4;
 const size_t DATA_SIZE = 2;
 
-void process(const IDataSet*, const IParametersReader*);
+void process(IDataSetAccessor*, const IParametersReader*);
+
 const IParametersReader* readParameters(const std::string& fileName);
 const IDataSet* readDataSet(const IDataSetReader*, const IParametersReader*, const std::string& fileName);
+
 const IDataSet* enlargeDataSet(const IDataSet*, const IParametersReader*);
 const double* createDataWithDeviation(const double* srcData, const size_t dataSize, double deviation);
+
+IDataSetAccessor* prepareDataSetWithAccessor(const IDataSet*, const IParametersReader*);
 
 int main()
 {
@@ -25,15 +29,30 @@ int main()
     const IDataSetReader* dataSetReader = new DataSetReader();
     const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_and.txt");
     const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
+    IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
 
-    process(dataSet, parametersReader);
+    process(dataSetAccessor, parametersReader);
 
+    delete dataSetAccessor;
     delete enlargedDataSet;
     delete dataSet;
     delete dataSetReader;
     delete parametersReader;
 
     return 0;
+}
+
+IDataSetAccessor* prepareDataSetWithAccessor(const IDataSet* dataSet, const IParametersReader* parametersReader)
+{
+    IDataSetAccessor* dataSetAccessor = new DataSetAccessor(dataSet);
+
+    double trainingSetPart = parametersReader->getParameter("trainingSetPart");
+    double validatingSetPart = parametersReader->getParameter("validatingSetPart");
+    double testingSetPart = parametersReader->getParameter("testingSetPart");
+
+    dataSetAccessor->splitDataSet(trainingSetPart, validatingSetPart, testingSetPart);
+
+    return dataSetAccessor;
 }
 
 const IDataSet* enlargeDataSet(const IDataSet* dataSet, const IParametersReader* parametersReader)
@@ -97,14 +116,13 @@ const IDataSet* readDataSet(
     return dataSet;
 }
 
-void process(const IDataSet* dataSet, const IParametersReader* parametersReader)
+void process(IDataSetAccessor* dataSetAccessor, const IParametersReader* parametersReader)
 {
     double alpha = parametersReader->getParameter("alpha");
     double theta = parametersReader->getParameter("theta");
     int epochs = (int) parametersReader->getParameter("epochs");
     double zeroDeviation = parametersReader->getParameter("randomWeightsZeroDeviation");
 
-    IDataSetAccessor* dataSetAccessor = new DataSetAccessor(dataSet);
     Perceptron perceptron(alpha, dataSetAccessor, new Neuron(new UnipolarStepFunction(theta)));
 
     std::cout << "Perceptron starts to learn..." << std::endl;

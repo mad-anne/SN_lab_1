@@ -8,9 +8,18 @@ class IDataSetAccessor
     public:
         virtual ~IDataSetAccessor() = default;
 
-        virtual void begin() = 0;
-        virtual const IData* getNext() = 0;
-        virtual void shuffle() = 0;
+        virtual void splitDataSet(double trainingPart, double validatingPart, double testingPart) = 0;
+
+        virtual void trainingDataBegin() = 0;
+        virtual void validatingDataBegin() = 0;
+        virtual void testingDataBegin() = 0;
+
+        virtual const IData* getNextTrainingData() = 0;
+        virtual const IData* getNextValidatingData() = 0;
+        virtual const IData* getNextTestingData() = 0;
+
+        virtual void shuffleTrainingSet() = 0;
+
         virtual const IDataSet* getDataSet() const = 0;
 };
 
