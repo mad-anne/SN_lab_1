@@ -33,11 +33,10 @@ PerceptronTestSuite::PerceptronTestSuite() :
     _dataSet(new std::vector<const IData*>()),
     dataSet(new DataSet(_dataSet, DATA_SIZE, DATA_SET_SIZE)),
     dataSetAccessor(new DataSetAccessor(dataSet)),
-    theta(0.5),
-    function(new UnipolarStepFunction(theta)),
+    function(new UnipolarStepFunction()),
     neuron(new Neuron()),
     alpha(0.01),
-    sut(new Perceptron(alpha, dataSetAccessor, neuron, function))
+    sut(new Perceptron(alpha, new double(theta), dataSetAccessor, neuron, function))
 {
     initDataSet();
 }

@@ -5,10 +5,8 @@
 
 class BipolarStepFunction : public IActivationFunction
 {
-    double theta;
-
     public:
-        BipolarStepFunction(double theta);
+        BipolarStepFunction();
         ~BipolarStepFunction();
 
         double getOutput(double input) const override;

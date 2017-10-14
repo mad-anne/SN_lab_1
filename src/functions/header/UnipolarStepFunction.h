@@ -5,10 +5,8 @@
 
 class UnipolarStepFunction : public IActivationFunction
 {
-    double theta;
-
     public:
-        UnipolarStepFunction(double theta);
+        UnipolarStepFunction();
         ~UnipolarStepFunction();
 
         double getOutput(double input) const override;

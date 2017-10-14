@@ -2,11 +2,14 @@
 
 Perceptron::Perceptron(
     double alpha,
+    const double* bias,
     IDataSetAccessor* dataSetAccessor,
     const INeuron* neuron,
     const IActivationFunction* activationFunction) :
         IClassifier(),
         alpha(alpha),
+        bias(bias),
+        w0(nullptr),
         dataSetAccessor(dataSetAccessor),
         neuron(neuron),
         function(activationFunction),
@@ -19,6 +22,8 @@ Perceptron::~Perceptron()
     delete neuron;
     delete[] weights;
     delete function;
+    delete bias;
+    delete w0;
 }
 
 void Perceptron::learn(int epochs)
@@ -38,7 +43,7 @@ void Perceptron::learnEpoch()
     const IData* data;
     while ((data = dataSetAccessor->getNextTrainingData()) != nullptr)
     {
-        double output = function->getOutput(neuron->processData(data, weights));
+        double output = function->getOutput(neuron->processData(data, weights, bias, w0));
         double discreteError = getDiscreteError(output, *data->getLabel());
         updateWeights(discreteError, data);
     }
@@ -46,7 +51,7 @@ void Perceptron::learnEpoch()
 
 int Perceptron::predict(const IData* data) const
 {
-    return (int) function->getOutput(neuron->processData(data, weights));
+    return (int) function->getOutput(neuron->processData(data, weights, bias, w0));
 }
 
 double Perceptron::getDiscreteError(double output, double expectedOutput) const
@@ -66,6 +71,12 @@ void Perceptron::initRandomWeights(double zeroDeviation)
         double random = ((double) rand() / (double) RAND_MAX);
         weights[i] = 2 * zeroDeviation * random - zeroDeviation;
     }
+
+    if (w0 != nullptr)
+        delete w0;
+
+    double random = ((double) rand() / (double) RAND_MAX);
+    w0 = new double(2 * zeroDeviation * random - zeroDeviation);
 }
 
 void Perceptron::updateWeights(double discreteError, const IData* data)
@@ -76,4 +87,6 @@ void Perceptron::updateWeights(double discreteError, const IData* data)
 
     for (int i = 0; i < dataSize; ++i)
         weights[i] += factor * inputs[i];
+
+    *w0 += factor * (*bias);
 }

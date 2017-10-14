@@ -9,6 +9,8 @@
 class Perceptron : public IClassifier
 {
     double alpha;
+    const double* bias;
+    double* w0;
 
     IDataSetAccessor* dataSetAccessor;
     const INeuron* neuron;
@@ -16,7 +18,7 @@ class Perceptron : public IClassifier
     double* weights;
 
     public:
-        Perceptron(double alpha, IDataSetAccessor*, const INeuron*, const IActivationFunction*);
+        Perceptron(double alpha, const double* bias, IDataSetAccessor*, const INeuron*, const IActivationFunction*);
         ~Perceptron();
 
         void initRandomWeights(double zeroDeviation);

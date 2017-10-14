@@ -9,10 +9,10 @@ class Neuron : public INeuron
         Neuron();
         ~Neuron();
 
-        double processData(const IData* data, double* weights) const override;
+        double processData(const IData* data, double* weights, const double* bias, const double* w0) const override;
 
     private:
-        double getNet(const double* inputs, const double* weights, const size_t dataSize) const;
+        double getNet(const double* inputs, const double* weights, const size_t dataSize, const double* bias, const double* w0) const;
 };
 
 

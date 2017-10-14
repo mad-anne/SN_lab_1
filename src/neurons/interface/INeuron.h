@@ -8,7 +8,7 @@ class INeuron
     public:
         virtual ~INeuron() = default;
 
-        virtual double processData(const IData* data, double* weights) const = 0;
+        virtual double processData(const IData* data, double* weights, const double* bias, const  double* w0) const = 0;
 };
 
 #endif //SN_LAB_1_INEURON_H

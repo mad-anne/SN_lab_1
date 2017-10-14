@@ -1,16 +1,14 @@
 #include "functions/header/BipolarStepFunction.h"
 
-BipolarStepFunction::BipolarStepFunction(double theta) :
-        IActivationFunction(),
-        theta(theta)
-{}
+BipolarStepFunction::BipolarStepFunction()
+= default;
 
 BipolarStepFunction::~BipolarStepFunction()
-{}
+= default;
 
 double BipolarStepFunction::getOutput(double input) const
 {
-    if (input < theta)
+    if (input < 0)
         return -1.0;
     return 1.0;
 }

@@ -10,13 +10,11 @@ class BipolarStepFunctionTestSuite : public ::testing::Test
         ~BipolarStepFunctionTestSuite();
 
     protected:
-        double theta;
         IActivationFunction* sut;
 };
 
 BipolarStepFunctionTestSuite::BipolarStepFunctionTestSuite() :
-        theta(0.5),
-        sut(new BipolarStepFunction(theta))
+        sut(new BipolarStepFunction())
 {}
 
 BipolarStepFunctionTestSuite::~BipolarStepFunctionTestSuite()
@@ -24,19 +22,17 @@ BipolarStepFunctionTestSuite::~BipolarStepFunctionTestSuite()
     delete sut;
 }
 
-TEST_F(BipolarStepFunctionTestSuite, returnsMinusOneWhenValueIsLessThanTheta)
+TEST_F(BipolarStepFunctionTestSuite, returnsMinusOneWhenValueIsLessThanZero)
 {
-    double value = theta - 0.01;
-    ASSERT_EQ(sut->getOutput(value), -1);
+    ASSERT_EQ(sut->getOutput(-0.01), -1);
 }
 
-TEST_F(BipolarStepFunctionTestSuite, returnsOneWhenValueIsEqualToTheta)
+TEST_F(BipolarStepFunctionTestSuite, returnsOneWhenValueIsEqualToZero)
 {
-    ASSERT_EQ(sut->getOutput(theta), 1);
+    ASSERT_EQ(sut->getOutput(0), 1);
 }
 
-TEST_F(BipolarStepFunctionTestSuite, returnsOneWhenValueIsGreaterThanTheta)
+TEST_F(BipolarStepFunctionTestSuite, returnsOneWhenValueIsGreaterThanZero)
 {
-    double value = theta + 0.01;
-    ASSERT_EQ(sut->getOutput(value), 1);
+    ASSERT_EQ(sut->getOutput(0.01), 1);
 }

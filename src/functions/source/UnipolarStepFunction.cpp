@@ -1,16 +1,14 @@
 #include "functions/header/UnipolarStepFunction.h"
 
-UnipolarStepFunction::UnipolarStepFunction(double theta) :
-    IActivationFunction(),
-    theta(theta)
-{}
+UnipolarStepFunction::UnipolarStepFunction()
+= default;
 
 UnipolarStepFunction::~UnipolarStepFunction()
-{}
+= default;
 
 double UnipolarStepFunction::getOutput(double input) const
 {
-    if (input < theta)
+    if (input < 0)
         return 0.0;
     return 1.0;
 }

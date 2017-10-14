@@ -10,13 +10,11 @@ class UnipolarStepFunctionTestSuite : public ::testing::Test
         ~UnipolarStepFunctionTestSuite();
 
     protected:
-        double theta;
         IActivationFunction* sut;
 };
 
 UnipolarStepFunctionTestSuite::UnipolarStepFunctionTestSuite() :
-    theta(0.5),
-    sut(new UnipolarStepFunction(theta))
+    sut(new UnipolarStepFunction())
 {}
 
 UnipolarStepFunctionTestSuite::~UnipolarStepFunctionTestSuite()
@@ -24,19 +22,17 @@ UnipolarStepFunctionTestSuite::~UnipolarStepFunctionTestSuite()
     delete sut;
 }
 
-TEST_F(UnipolarStepFunctionTestSuite, returnsZeroWhenValueIsLessThanTheta)
+TEST_F(UnipolarStepFunctionTestSuite, returnsZeroWhenValueIsLessThanZero)
 {
-    double value = theta - 0.01;
-    ASSERT_EQ(sut->getOutput(value), 0);
+    ASSERT_EQ(sut->getOutput(-0.01), 0);
 }
 
-TEST_F(UnipolarStepFunctionTestSuite, returnsOneWhenValueIsEqualToTheta)
+TEST_F(UnipolarStepFunctionTestSuite, returnsOneWhenValueIsEqualToZero)
 {
-    ASSERT_EQ(sut->getOutput(theta), 1);
+    ASSERT_EQ(sut->getOutput(0), 1);
 }
 
-TEST_F(UnipolarStepFunctionTestSuite, returnsOneWhenValueIsGreaterThanTheta)
+TEST_F(UnipolarStepFunctionTestSuite, returnsOneWhenValueIsGreaterThanZero)
 {
-    double value = theta + 0.01;
-    ASSERT_EQ(sut->getOutput(value), 1);
+    ASSERT_EQ(sut->getOutput(0.01), 1);
 }
