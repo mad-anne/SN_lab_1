@@ -35,9 +35,9 @@ PerceptronTestSuite::PerceptronTestSuite() :
     dataSetAccessor(new DataSetAccessor(dataSet)),
     theta(0.5),
     function(new UnipolarStepFunction(theta)),
-    neuron(new Neuron(function)),
+    neuron(new Neuron()),
     alpha(0.01),
-    sut(new Perceptron(alpha, dataSetAccessor, neuron))
+    sut(new Perceptron(alpha, dataSetAccessor, neuron, function))
 {
     initDataSet();
 }

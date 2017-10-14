@@ -3,11 +3,13 @@
 Perceptron::Perceptron(
     double alpha,
     IDataSetAccessor* dataSetAccessor,
-    const INeuron* neuron) :
+    const INeuron* neuron,
+    const IActivationFunction* activationFunction) :
         IClassifier(),
         alpha(alpha),
         dataSetAccessor(dataSetAccessor),
         neuron(neuron),
+        function(activationFunction),
         weights(nullptr)
 {}
 
@@ -16,10 +18,14 @@ Perceptron::~Perceptron()
     delete dataSetAccessor;
     delete neuron;
     delete[] weights;
+    delete function;
 }
 
 void Perceptron::learn(int epochs)
 {
+    if (weights == nullptr)
+        return;
+
     for (int i = 0; i < epochs; ++i)
         learnEpoch();
 }
@@ -32,7 +38,7 @@ void Perceptron::learnEpoch()
     const IData* data;
     while ((data = dataSetAccessor->getNextTrainingData()) != nullptr)
     {
-        double output = neuron->processData(data, weights);
+        double output = function->getOutput(neuron->processData(data, weights));
         double discreteError = getDiscreteError(output, *data->getLabel());
         updateWeights(discreteError, data);
     }
@@ -40,7 +46,7 @@ void Perceptron::learnEpoch()
 
 int Perceptron::predict(const IData* data) const
 {
-    return (int) neuron->processData(data, weights);
+    return (int) function->getOutput(neuron->processData(data, weights));
 }
 
 double Perceptron::getDiscreteError(double output, double expectedOutput) const

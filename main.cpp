@@ -125,7 +125,7 @@ void process(IDataSetAccessor* dataSetAccessor, const IParametersReader* paramet
     int epochs = (int) parametersReader->getParameter("epochs");
     double zeroDeviation = parametersReader->getParameter("randomWeightsZeroDeviation");
 
-    Perceptron perceptron(alpha, dataSetAccessor, new Neuron(new UnipolarStepFunction(theta)));
+    Perceptron perceptron(alpha, dataSetAccessor, new Neuron(), new UnipolarStepFunction(theta));
 
     std::cout << "Perceptron initializing random weights..." << std::endl;
     perceptron.initRandomWeights(zeroDeviation);

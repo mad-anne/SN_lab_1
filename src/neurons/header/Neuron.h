@@ -1,15 +1,12 @@
 #ifndef SN_LAB_1_NEURON_H
 #define SN_LAB_1_NEURON_H
 
-#include "functions/interface/IActivationFunction.h"
 #include "neurons/interface/INeuron.h"
 
 class Neuron : public INeuron
 {
-    const IActivationFunction* function;
-
     public:
-        Neuron(const IActivationFunction* function);
+        Neuron();
         ~Neuron();
 
         double processData(const IData* data, double* weights) const override;
