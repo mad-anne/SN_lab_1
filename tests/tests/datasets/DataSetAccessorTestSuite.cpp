@@ -18,7 +18,6 @@ class DataSetAccessorTestSuite : public ::testing::Test
         IDataSet* dataSet;
         IDataSetAccessor* sut;
 
-        bool dataSetContainsData(const IData* data);
         void initDataSet();
 };
 
@@ -28,6 +27,8 @@ DataSetAccessorTestSuite::DataSetAccessorTestSuite() :
     sut(new DataSetAccessor(dataSet))
 {
     initDataSet();
+    sut->splitDataSet(0.75, 0, 0.25);
+    sut->trainingDataBegin();
 }
 
 DataSetAccessorTestSuite::~DataSetAccessorTestSuite()
@@ -44,49 +45,27 @@ void DataSetAccessorTestSuite::initDataSet()
     (*_dataSet).push_back(new Data(new double[DATA_SIZE] {1, 1}, new int(1), DATA_SIZE));
 }
 
-bool DataSetAccessorTestSuite::dataSetContainsData(const IData* data)
-{
-    for (int i = 0; i < DATA_SET_SIZE; ++i)
-        if (dataSet->getData(i) == data)
-            return true;
-    return false;
-}
-
-TEST_F(DataSetAccessorTestSuite, getNextReturnsFirstDataOnInit)
-{
-    ASSERT_EQ(sut->getNext(), (*_dataSet).at(0));
-}
-
-TEST_F(DataSetAccessorTestSuite, getNextReturnsNextData)
-{
-    sut->getNext();
-    sut->getNext();
-    ASSERT_EQ(sut->getNext(), (*_dataSet).at(2));
-}
-
 TEST_F(DataSetAccessorTestSuite, getNextReturnsNullptrAfterLastData)
 {
-    sut->getNext();
-    sut->getNext();
-    sut->getNext();
-    sut->getNext();
-    ASSERT_EQ(sut->getNext(), nullptr);
+    sut->getNextTrainingData();
+    sut->getNextTrainingData();
+    sut->getNextTrainingData();
+    ASSERT_EQ(sut->getNextTrainingData(), nullptr);
 }
 
 TEST_F(DataSetAccessorTestSuite, beginSetsAccessorToFirstElement)
 {
-    sut->getNext();
-    sut->begin();
-    ASSERT_EQ(sut->getNext(), (*_dataSet).at(0));
+    const IData* data = sut->getNextTrainingData();
+    sut->trainingDataBegin();
+    ASSERT_EQ(sut->getNextTrainingData(), data);
 }
 
 TEST_F(DataSetAccessorTestSuite, afterShuffleAccessorContainsAllElements)
 {
-    sut->shuffle();
-    sut->begin();
-    ASSERT_TRUE(dataSetContainsData(sut->getNext()));
-    ASSERT_TRUE(dataSetContainsData(sut->getNext()));
-    ASSERT_TRUE(dataSetContainsData(sut->getNext()));
-    ASSERT_TRUE(dataSetContainsData(sut->getNext()));
-    ASSERT_FALSE(dataSetContainsData(sut->getNext()));
+    sut->getNextTrainingData();
+    sut->trainingDataBegin();
+    ASSERT_NE(sut->getNextTrainingData(), nullptr);
+    ASSERT_NE(sut->getNextTrainingData(), nullptr);
+    ASSERT_NE(sut->getNextTrainingData(), nullptr);
+    ASSERT_EQ(sut->getNextTrainingData(), nullptr);
 }
