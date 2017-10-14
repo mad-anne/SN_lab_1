@@ -12,11 +12,10 @@
 #include "neurons/header/Neuron.h"
 
 
-const size_t DATA_SET_SIZE = 4;
-const size_t DATA_SIZE = 2;
-
-void process(IDataSetAccessor*, const IParametersReader*);
-void processAdaline(IDataSetAccessor*, const IParametersReader*);
+void processBipolarAnd(const IDataSetReader*, const IParametersReader*, double alpha, int epochs, double zeroDeviation, double bias, double minMSE);
+void processUnipolarAnd(const IDataSetReader*, const IParametersReader*, double alpha, int epochs, double zeroDeviation, double bias, double minMSE);
+void processBipolarOr(const IDataSetReader*, const IParametersReader*, double alpha, int epochs, double zeroDeviation, double bias, double minMSE);
+void processUnipolarOr(const IDataSetReader*, const IParametersReader*, double alpha, int epochs, double zeroDeviation, double bias, double minMSE);
 
 const IParametersReader* readParameters(const std::string& fileName);
 const IDataSet* readDataSet(const IDataSetReader*, const IParametersReader*, const std::string& fileName);
@@ -31,16 +30,18 @@ int main()
 {
     const IParametersReader* parametersReader = readParameters("../../parameters.txt");
     const IDataSetReader* dataSetReader = new DataSetReader();
-    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_and_unipolar.txt");
-    const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
-    IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
 
-    process(dataSetAccessor, parametersReader);
-    processAdaline(dataSetAccessor, parametersReader);
+    double alpha = parametersReader->getParameter("alpha");
+    int epochs = (int) parametersReader->getParameter("epochs");
+    double zeroDeviation = parametersReader->getParameter("randomWeightsZeroDeviation");
+    double bias = parametersReader->getParameter("bias");
+    double minMSE = parametersReader->getParameter("minMSE");
 
-    delete dataSetAccessor;
-    delete enlargedDataSet;
-    delete dataSet;
+    processUnipolarAnd(dataSetReader, parametersReader, alpha, epochs, zeroDeviation, bias, minMSE);
+    processBipolarAnd(dataSetReader, parametersReader, alpha, epochs, zeroDeviation, bias, minMSE);
+    processUnipolarOr(dataSetReader, parametersReader, alpha, epochs, zeroDeviation, bias, minMSE);
+    processBipolarOr(dataSetReader, parametersReader, alpha, epochs, zeroDeviation, bias, minMSE);
+
     delete dataSetReader;
     delete parametersReader;
 
@@ -105,8 +106,6 @@ const IParametersReader* readParameters(const std::string& fileName)
     std::cout << "Parameters:\n";
     parametersReader->printParameters();
 
-    std::cout << "Reading parameters  finished\n\n";
-
     return parametersReader;
 }
 
@@ -117,53 +116,86 @@ const IDataSet* readDataSet(
 {
     size_t dataSize = (size_t) parametersReader->getParameter("dataSize");
 
-    std::cout << "\nReading dataset for AND from " << fileName << "...\n\n";
-    const IDataSet* dataSet = dataSetReader->readDataSet(fileName, dataSize);
-    std::cout << "Reading dataset finished\n\n";
-    return dataSet;
+    std::cout << "\nReading dataset from " << fileName << "...\n\n";
+    return dataSetReader->readDataSet(fileName, dataSize);
 }
 
-void process(IDataSetAccessor* dataSetAccessor, const IParametersReader* parametersReader)
+void processUnipolarAnd(
+    const IDataSetReader* dataSetReader,
+    const IParametersReader* parametersReader,
+    double alpha,
+    int epochs,
+    double zeroDeviation,
+    double bias,
+    double minMSE)
 {
-    double alpha = parametersReader->getParameter("alpha");
-    int epochs = (int) parametersReader->getParameter("epochs");
-    double zeroDeviation = parametersReader->getParameter("randomWeightsZeroDeviation");
-    double bias = parametersReader->getParameter("bias");
+    std::cout << "\nLearning classifiers for AND with Unipolar step function\n";
+
+    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_and_unipolar.txt");
+    const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
+    IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
 
     IClassifier* perceptron = new Perceptron(alpha, new double(bias), dataSetAccessor, new Neuron(), new UnipolarStepFunction());
-
-    std::cout << "Perceptron initializing random weights..." << std::endl;
+    std::cout << "Perceptron..." << std::endl;
     perceptron->initRandomWeights(zeroDeviation);
-    std::cout << "Perceptron learning..." << std::endl;
     perceptron->learn(epochs);
-    std::cout << "Perceptron finished learning" << std::endl;
 
-    std::cout << "Perceptron with alpha = " << alpha << " and Unipolar step function predicts AND:\n";
     predict(perceptron, 0, 0, 0);
     predict(perceptron, 0, 1, 0);
     predict(perceptron, 1, 0, 0);
     predict(perceptron, 1, 1, 1);
 
     delete perceptron;
+
+    IClassifier* adaline = new Adaline(alpha, new double(bias), minMSE, dataSetAccessor, new Neuron(), new UnipolarStepFunction());
+    std::cout << "Adaline..." << std::endl;
+    adaline->initRandomWeights(zeroDeviation);
+    adaline->learn(epochs);
+
+    predict(adaline, 0, 0, 0);
+    predict(adaline, 0, 1, 0);
+    predict(adaline, 1, 0, 0);
+    predict(adaline, 1, 1, 1);
+
+    delete adaline;
+
+    delete dataSetAccessor;
+    delete dataSet;
+    delete enlargedDataSet;
 }
 
-void processAdaline(IDataSetAccessor* dataSetAccessor, const IParametersReader* parametersReader)
+void processBipolarAnd(
+    const IDataSetReader* dataSetReader,
+    const IParametersReader* parametersReader,
+    double alpha,
+    int epochs,
+    double zeroDeviation,
+    double bias,
+    double minMSE)
 {
-    double alpha = parametersReader->getParameter("alpha");
-    int epochs = (int) parametersReader->getParameter("epochs");
-    double zeroDeviation = parametersReader->getParameter("randomWeightsZeroDeviation");
-    double bias = parametersReader->getParameter("bias");
-    double minMSE = parametersReader->getParameter("minMSE");
+    std::cout << "\nLearning classifiers for AND with Bipolar step function\n";
+
+    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_and_bipolar.txt");
+    const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
+    IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
+
+    IClassifier* perceptron = new Perceptron(alpha, new double(bias), dataSetAccessor, new Neuron(), new BipolarStepFunction());
+    std::cout << "Perceptron...\n";
+    perceptron->initRandomWeights(zeroDeviation);
+    perceptron->learn(epochs);
+
+    predict(perceptron, -1, -1, -1);
+    predict(perceptron, -1, 1, -1);
+    predict(perceptron, 1, -1, -1);
+    predict(perceptron, 1, 1, 1);
+
+    delete perceptron;
 
     IClassifier* adaline = new Adaline(alpha, new double(bias), minMSE, dataSetAccessor, new Neuron(), new BipolarStepFunction());
-
-    std::cout << "Adaline initializing random weights..." << std::endl;
+    std::cout << "Adaline...\n";
     adaline->initRandomWeights(zeroDeviation);
-    std::cout << "Adaline learning AND..." << std::endl;
     adaline->learn(epochs);
-    std::cout << "Adaline finished learning" << std::endl;
 
-    std::cout << "Adaline with alpha = " << alpha << " and Bipolar step function predicts AND:\n";
     predict(adaline, -1, -1, -1);
     predict(adaline, -1, 1, -1);
     predict(adaline, 1, -1, -1);
@@ -172,9 +204,93 @@ void processAdaline(IDataSetAccessor* dataSetAccessor, const IParametersReader* 
     delete adaline;
 }
 
+void processUnipolarOr(
+        const IDataSetReader* dataSetReader,
+        const IParametersReader* parametersReader,
+        double alpha,
+        int epochs,
+        double zeroDeviation,
+        double bias,
+        double minMSE)
+{
+    std::cout << "\nLearning classifiers for OR with Unipolar step function\n";
+
+    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_or_unipolar.txt");
+    const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
+    IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
+
+    IClassifier* perceptron = new Perceptron(alpha, new double(bias), dataSetAccessor, new Neuron(), new UnipolarStepFunction());
+    std::cout << "Perceptron..." << std::endl;
+    perceptron->initRandomWeights(zeroDeviation);
+    perceptron->learn(epochs);
+
+    predict(perceptron, 0, 0, 0);
+    predict(perceptron, 0, 1, 1);
+    predict(perceptron, 1, 0, 1);
+    predict(perceptron, 1, 1, 1);
+
+    delete perceptron;
+
+    IClassifier* adaline = new Adaline(alpha, new double(bias), minMSE, dataSetAccessor, new Neuron(), new UnipolarStepFunction());
+    std::cout << "Adaline..." << std::endl;
+    adaline->initRandomWeights(zeroDeviation);
+    adaline->learn(epochs);
+
+    predict(adaline, 0, 0, 0);
+    predict(adaline, 0, 1, 1);
+    predict(adaline, 1, 0, 1);
+    predict(adaline, 1, 1, 1);
+
+    delete adaline;
+
+    delete dataSetAccessor;
+    delete dataSet;
+    delete enlargedDataSet;
+}
+
+void processBipolarOr(
+        const IDataSetReader* dataSetReader,
+        const IParametersReader* parametersReader,
+        double alpha,
+        int epochs,
+        double zeroDeviation,
+        double bias,
+        double minMSE)
+{
+    std::cout << "\nLearning classifiers for OR with Bipolar step function\n";
+
+    const IDataSet* dataSet = readDataSet(dataSetReader, parametersReader, "../../dataset_or_bipolar.txt");
+    const IDataSet* enlargedDataSet = enlargeDataSet(dataSet, parametersReader);
+    IDataSetAccessor* dataSetAccessor = prepareDataSetWithAccessor(enlargedDataSet, parametersReader);
+
+    IClassifier* perceptron = new Perceptron(alpha, new double(bias), dataSetAccessor, new Neuron(), new BipolarStepFunction());
+    std::cout << "Perceptron...\n";
+    perceptron->initRandomWeights(zeroDeviation);
+    perceptron->learn(epochs);
+
+    predict(perceptron, -1, -1, -1);
+    predict(perceptron, -1, 1, 1);
+    predict(perceptron, 1, -1, 1);
+    predict(perceptron, 1, 1, 1);
+
+    delete perceptron;
+
+    IClassifier* adaline = new Adaline(alpha, new double(bias), minMSE, dataSetAccessor, new Neuron(), new BipolarStepFunction());
+    std::cout << "Adaline...\n";
+    adaline->initRandomWeights(zeroDeviation);
+    adaline->learn(epochs);
+
+    predict(adaline, -1, -1, -1);
+    predict(adaline, -1, 1, 1);
+    predict(adaline, 1, -1, 1);
+    predict(adaline, 1, 1, 1);
+
+    delete adaline;
+}
+
 void predict(IClassifier* classifier, double value1, double value2, int label)
 {
-    const IData* input = new Data(new double[DATA_SIZE] {value1, value2}, new int(label), DATA_SIZE);
+    const IData* input = new Data(new double[2] {value1, value2}, new int(label), 2);
     std::cout << "(" << value1 << ", " << value2 << ") = " << classifier->predict(input) << std::endl;
     delete input;
 }
