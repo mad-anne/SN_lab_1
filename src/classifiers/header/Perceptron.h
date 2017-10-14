@@ -17,7 +17,7 @@ class Perceptron : public IClassifier
         Perceptron(double alpha, IDataSetAccessor* dataSetAccessor, const INeuron* neuron);
         ~Perceptron();
 
-        void learn(int epochs) override;
+        void learn(int epochs, double initWeightsDeviation) override;
         int predict(const IData* data) const;
 
     private:

@@ -1,5 +1,10 @@
 alpha 0.01
 theta 0.5
+epochs 50
 dataSize 2
-dataSetSize 4
-randomWeightsDeviation 0.01
+randomWeightsZeroDeviation 0.2
+enlargeDataSetTimes 50
+enlargedDataSetMaxDeviation 0.01
+trainingSetPart 0.7
+validationSetPart 0.15
+testSetPart 0.15

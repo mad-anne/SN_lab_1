@@ -13,7 +13,7 @@
 const size_t DATA_SET_SIZE = 4;
 const size_t DATA_SIZE = 2;
 
-void process(const IDataSet* dataSet);
+void process(const IDataSet* dataSet, const IParametersReader* parametersReader);
 
 int main()
 {
@@ -31,7 +31,7 @@ int main()
     std::cout << "\nReading dataset for AND...\n\n";
     const IDataSet* dataSet = dataSetReader->readDataSet("../../dataset_and.txt", dataSize);
 
-    process(dataSet);
+    process(dataSet, parametersReader);
 
     delete dataSet;
     delete dataSetReader;
@@ -40,13 +40,18 @@ int main()
     return 0;
 }
 
-void process(const IDataSet* dataSet)
+void process(const IDataSet* dataSet, const IParametersReader* parametersReader)
 {
+    double alpha = parametersReader->getParameter("alpha");
+    double theta = parametersReader->getParameter("theta");
+    int epochs = (int) parametersReader->getParameter("epochs");
+    double zeroDeviation = parametersReader->getParameter("randomWeightsZeroDeviation");
+
     IDataSetAccessor* dataSetAccessor = new DataSetAccessor(dataSet);
-    Perceptron perceptron(0.01, dataSetAccessor, new Neuron(new UnipolarStepFunction(0.5)));
+    Perceptron perceptron(alpha, dataSetAccessor, new Neuron(new UnipolarStepFunction(theta)));
 
     std::cout << "Perceptron starts to learn..." << std::endl;
-    perceptron.learn(100);
+    perceptron.learn(epochs, zeroDeviation);
     std::cout << "Perceptron finished learning." << std::endl;
 
     const IData* input = new Data(new double[DATA_SIZE] {0, 0}, new int(0), DATA_SIZE);
