@@ -1,11 +1,12 @@
 alpha 0.01
 epochs 100
+minMSE 0.043
+randomWeightsZeroDeviation 0.1
 bias 1.0
 dataSize 2
-randomWeightsZeroDeviation 0.1
 enlargeDataSetTimes 100
-enlargedDataSetMaxDeviation 0.01
+enlargedDataSetMaxDeviation 0.1
 trainingSetPart 0.7
 validatingSetPart 0.15
 testingSetPart 0.15
-minMSE 0.043
+repetitions 30
