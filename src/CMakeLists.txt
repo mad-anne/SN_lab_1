@@ -4,6 +4,7 @@ project(src)
 set(SOURCE_FILES
         classifiers/source/Adaline.cpp
         classifiers/source/Perceptron.cpp
+        classifiers/source/Score.cpp
 
         datasets/source/Data.cpp
         datasets/source/DataSet.cpp

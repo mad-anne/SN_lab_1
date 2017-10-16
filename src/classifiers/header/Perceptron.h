@@ -1,6 +1,7 @@
 #ifndef SN_LAB_1_PERCEPTRON_H
 #define SN_LAB_1_PERCEPTRON_H
 
+#include "classifiers/interface/IScore.h"
 #include "classifiers/interface/IClassifier.h"
 #include "datasets/interface/IDataSetAccessor.h"
 #include "functions/interface/IActivationFunction.h"
@@ -24,11 +25,13 @@ class Perceptron : public IClassifier
         void initRandomWeights(double zeroDeviation);
         void learn(int epochs) override;
         int predict(const IData* data) const;
+        const IScore* validate() override;
 
     private:
         void learnEpoch();
         void updateWeights(double discreteError, const IData* data);
         double getDiscreteError(double output, double expectedOutput) const;
+        void updateScore(IScore* score, int predictedLabel, int label);
 };
 
 

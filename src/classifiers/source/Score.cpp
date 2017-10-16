@@ -2,29 +2,41 @@
 #include "classifiers/header/Score.h"
 
 
-Score::Score(const size_t dataSetSize) :
-    dataSetSize(dataSetSize)
-{}
+Score::Score()
+= default;
 
 Score::~Score()
 = default;
 
-void Score::setTruePositives(int value)
+void Score::addTruePositives(int value)
 {
-    truePositives = value;
+    truePositives += value;
 }
 
-void Score::setTrueNegatives(int value)
+void Score::addTrueNegatives(int value)
 {
-    trueNegatives = value;
+    trueNegatives += value;
 }
 
-void Score::setFalsePositives(int value)
+void Score::addFalsePositives(int value)
 {
-    falsePositives = value;
+    falsePositives += value;
 }
 
-void Score::setFalseNegatives(int value)
+void Score::addFalseNegatives(int value)
 {
-    falseNegatives = value;
+    falseNegatives += value;
+}
+
+void Score::reset()
+{
+    truePositives = 0;
+    trueNegatives = 0;
+    falsePositives = 0;
+    falseNegatives = 0;
+}
+
+double Score::getAccuracy() const
+{
+    return ((truePositives + trueNegatives) / (truePositives + trueNegatives + falsePositives + falseNegatives)) * 100;
 }

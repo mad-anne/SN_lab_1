@@ -5,21 +5,23 @@
 
 class Score : public IScore
 {
-    const size_t dataSetSize;
-
     int truePositives;
     int trueNegatives;
     int falsePositives;
     int falseNegatives;
 
     public:
-        Score(const size_t dataSetSize);
+        Score();
         ~Score();
 
-        void setTruePositives(int truePositives) override;
-        void setTrueNegatives(int trueNegatives) override;
-        void setFalsePositives(int falsePositives) override;
-        void setFalseNegatives(int falseNegatives) override;
+        void reset() override;
+
+        void addTruePositives(int truePositives) override;
+        void addTrueNegatives(int trueNegatives) override;
+        void addFalsePositives(int falsePositives) override;
+        void addFalseNegatives(int falseNegatives) override;
+
+        double getAccuracy() const override;
 };
 
 

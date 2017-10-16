@@ -18,6 +18,10 @@ class IDataSetAccessor
         virtual const IData* getNextValidatingData() = 0;
         virtual const IData* getNextTestingData() = 0;
 
+        virtual const size_t getTrainingDataSetSize() const = 0;
+        virtual const size_t getValidatingDataSetSize() const = 0;
+        virtual const size_t getTestingDataSetSize() const = 0;
+
         virtual void shuffleTrainingSet() = 0;
 
         virtual const IDataSet* getDataSet() const = 0;

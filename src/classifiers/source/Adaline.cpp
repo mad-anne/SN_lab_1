@@ -1,6 +1,5 @@
+#include "classifiers/header/Score.h"
 #include "classifiers/header/Adaline.h"
-
-#include <iostream>
 
 Adaline::Adaline(
         double alpha,
@@ -56,7 +55,7 @@ double Adaline::learnEpoch()
         errorsSum += error * error;
         updateWeights(error, data);
     }
-    return errorsSum / dataSetAccessor->getDataSet()->getDataSetSize();
+    return errorsSum / dataSetAccessor->getTrainingDataSetSize();
 }
 
 int Adaline::predict(const IData* data) const
@@ -99,4 +98,34 @@ void Adaline::updateWeights(double error, const IData* data)
         weights[i] += factor * inputs[i];
 
     *w0 += factor * (*bias);
+}
+
+const IScore* Adaline::validate()
+{
+    dataSetAccessor->validatingDataBegin();
+    IScore* score = new Score();
+
+    const IData* data;
+    while((data = dataSetAccessor->getNextValidatingData()) != nullptr)
+        updateScore(score, predict(data), *data->getLabel());
+
+    return score;
+}
+
+void Adaline::updateScore(IScore* score, int predictedLabel, int label)
+{
+    if (predictedLabel == label)
+    {
+        if (label == 1)
+            score->addTruePositives(1);
+        else
+            score->addTrueNegatives(1);
+    }
+    else
+    {
+        if (label == 1)
+            score->addFalseNegatives(1);
+        else
+            score->addFalsePositives(1);
+    }
 }

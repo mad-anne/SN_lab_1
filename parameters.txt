@@ -1,6 +1,6 @@
 alpha 0.01
 epochs 100
-minMSE 0.043
+minMSE 0.064
 randomWeightsZeroDeviation 0.1
 bias 1.0
 dataSize 2

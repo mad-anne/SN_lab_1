@@ -74,3 +74,17 @@ const IDataSet* DataSetAccessor::getDataSet() const
     return dataSet;
 }
 
+const size_t DataSetAccessor::getTrainingDataSetSize() const
+{
+    return trainingSetIndexes.size();
+}
+
+const size_t DataSetAccessor::getValidatingDataSetSize() const
+{
+    return validatingSetIndexes.size();
+}
+
+const size_t DataSetAccessor::getTestingDataSetSize() const
+{
+    return testingSetIndexes.size();
+}

@@ -30,6 +30,10 @@ class DataSetAccessor : public IDataSetAccessor
         const IData* getNextValidatingData() override;
         const IData* getNextTestingData() override;
 
+        const size_t getTrainingDataSetSize() const override;
+        const size_t getValidatingDataSetSize() const override;
+        const size_t getTestingDataSetSize() const override;
+
         void shuffleTrainingSet() override;
 
         const IDataSet* getDataSet() const override;
